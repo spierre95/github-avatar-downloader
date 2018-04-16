@@ -1,10 +1,12 @@
+
+var args = process.argv
+
 var request = require('request');
 var authorize = require('./secrets.js')
 var fs = require('fs')
 
-console.log('Welcome to the GitHub Avatar Downloader!');
-
 function getRepoContributors(repoOwner, repoName, cb) {
+console.log('ran the function')
 
   var options = {
 
@@ -17,17 +19,22 @@ function getRepoContributors(repoOwner, repoName, cb) {
   }
 
 request(options, function(err, res, body) {
+  console.log(err);
   cb(err, JSON.parse(body));
 });
 
 }
 
-getRepoContributors("jquery", "jquery", function(err, result) {
+if(!args[2] || !args[3]){
+  console.log('ERROR! Both fields must be filled out')
+} else {
+getRepoContributors(args[2], args[3], function(err, result) {
   console.log("Errors:", err);
   for (var element of result){
     downloadImageByURL(element.avatar_url,`./avatars/${element.login}_avatar.jpg`)
   }
 });
+}
 
 function downloadImageByURL(url,filePath) {
 request.get(url)
