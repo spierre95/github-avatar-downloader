@@ -24,9 +24,44 @@ request(options, function(err, res, body) {
 
 getRepoContributors("jquery", "jquery", function(err, result) {
   console.log("Errors:", err);
-  // console.log("Result:", result);
   for (var element of result){
-    console.log(element.avatar_url)
+    downloadImageByURL(element.avatar_url,`./avatars/${element.login}_avatar.jpg`)
   }
 });
+
+function downloadImageByURL(url,filePath) {
+request.get(url)
+ .on('error', function (err) {
+  throw err;
+  })
+  .on('response', function (response) {
+   console.log(response.statusMessage)
+   console.log(response.headers['content-type'])
+  })
+  .on('end', function(end) {
+  console.log('Download complete.');
+  })
+  .pipe(fs.createWriteStream(filePath));
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
